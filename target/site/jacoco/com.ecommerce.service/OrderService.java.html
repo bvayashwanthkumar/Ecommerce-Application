@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>OrderService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">E-Commerce Application</a> &gt; <a href="index.source.html" class="el_package">com.ecommerce.service</a> &gt; <span class="el_source">OrderService.java</span></div><h1>OrderService.java</h1><pre class="source lang-java linenums">package com.ecommerce.service;
+
+import com.ecommerce.model.Order;
+import com.ecommerce.model.User;
+import com.ecommerce.repository.OrderRepository;
+import com.ecommerce.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+
+/**
+ * Order Service - Business logic for orders
+ */
+@Service
+<span class="fc" id="L17">public class OrderService {</span>
+
+    @Autowired
+    private OrderRepository orderRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    /**
+     * Get all orders
+     */
+    public List&lt;Order&gt; getAllOrders() {
+<span class="nc" id="L29">        return orderRepository.findAll();</span>
+    }
+
+    /**
+     * Get order by ID
+     */
+    public Order getOrderById(Long id) {
+<span class="fc" id="L36">        Optional&lt;Order&gt; order = orderRepository.findById(id);</span>
+<span class="fc" id="L37">        return order.orElse(null);</span>
+    }
+
+    /**
+     * Get orders by user
+     */
+    public List&lt;Order&gt; getOrdersByUser(Long userId) {
+<span class="nc" id="L44">        return orderRepository.findByUserId(userId);</span>
+    }
+
+    /**
+     * Get orders by status
+     */
+    public List&lt;Order&gt; getOrdersByStatus(Order.OrderStatus status) {
+<span class="nc" id="L51">        return orderRepository.findByStatus(status);</span>
+    }
+
+    /**
+     * Create new order
+     */
+    public Order createOrder(Long userId, Double totalAmount, String notes) {
+<span class="fc" id="L58">        Optional&lt;User&gt; optionalUser = userRepository.findById(userId);</span>
+        
+<span class="pc bpc" id="L60" title="1 of 2 branches missed.">        if (!optionalUser.isPresent()) {</span>
+<span class="nc" id="L61">            return null; // User not found</span>
+        }
+
+<span class="fc" id="L64">        Order order = new Order();</span>
+<span class="fc" id="L65">        order.setUser(optionalUser.get());</span>
+<span class="fc" id="L66">        order.setTotalAmount(totalAmount);</span>
+<span class="fc" id="L67">        order.setNotes(notes);</span>
+<span class="fc" id="L68">        order.setStatus(Order.OrderStatus.PENDING);</span>
+<span class="fc" id="L69">        order.setCreatedAt(new Date());</span>
+<span class="fc" id="L70">        order.setUpdatedAt(new Date());</span>
+
+<span class="fc" id="L72">        return orderRepository.save(order);</span>
+    }
+
+    /**
+     * Update order status
+     */
+    public Order updateOrderStatus(Long orderId, Order.OrderStatus newStatus) {
+<span class="nc" id="L79">        Optional&lt;Order&gt; optionalOrder = orderRepository.findById(orderId);</span>
+        
+<span class="nc bnc" id="L81" title="All 2 branches missed.">        if (!optionalOrder.isPresent()) {</span>
+<span class="nc" id="L82">            return null;</span>
+        }
+
+<span class="nc" id="L85">        Order order = optionalOrder.get();</span>
+<span class="nc" id="L86">        order.setStatus(newStatus);</span>
+<span class="nc" id="L87">        order.setUpdatedAt(new Date());</span>
+
+<span class="nc" id="L89">        return orderRepository.save(order);</span>
+    }
+
+    /**
+     * Cancel order (only if pending)
+     */
+    public boolean cancelOrder(Long orderId) {
+<span class="fc" id="L96">        Optional&lt;Order&gt; optionalOrder = orderRepository.findById(orderId);</span>
+        
+<span class="pc bpc" id="L98" title="1 of 2 branches missed.">        if (!optionalOrder.isPresent()) {</span>
+<span class="nc" id="L99">            return false;</span>
+        }
+
+<span class="fc" id="L102">        Order order = optionalOrder.get();</span>
+        
+<span class="fc bfc" id="L104" title="All 2 branches covered.">        if (order.getStatus() == Order.OrderStatus.PENDING) {</span>
+<span class="fc" id="L105">            order.setStatus(Order.OrderStatus.CANCELLED);</span>
+<span class="fc" id="L106">            order.setUpdatedAt(new Date());</span>
+<span class="fc" id="L107">            orderRepository.save(order);</span>
+<span class="fc" id="L108">            return true;</span>
+        }
+
+<span class="fc" id="L111">        return false;</span>
+    }
+
+    /**
+     * Get high-value orders
+     */
+    public List&lt;Order&gt; getHighValueOrders(Double minAmount) {
+<span class="nc" id="L118">        return orderRepository.findByTotalAmountGreaterThan(minAmount);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

@@ -1,0 +1,15 @@
+com\ecommerce\controller\HealthController.class
+com\ecommerce\model\Order$OrderStatus.class
+com\ecommerce\model\Order.class
+com\ecommerce\repository\OrderRepository.class
+com\ecommerce\controller\ProductController.class
+com\ecommerce\service\ProductService.class
+com\ecommerce\repository\ProductRepository.class
+com\ecommerce\repository\UserRepository.class
+com\ecommerce\model\User.class
+com\ecommerce\controller\OrderController.class
+com\ecommerce\model\Product.class
+com\ecommerce\service\UserService.class
+com\ecommerce\EcommerceApplication.class
+com\ecommerce\service\OrderService.class
+com\ecommerce\controller\UserController.class

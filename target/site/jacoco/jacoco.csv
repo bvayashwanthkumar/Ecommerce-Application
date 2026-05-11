@@ -1,0 +1,13 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+E-Commerce Application,com.ecommerce.model,Order,347,50,62,0,8,7,42,10,11,10
+E-Commerce Application,com.ecommerce.model,User,437,54,78,0,9,8,53,11,14,11
+E-Commerce Application,com.ecommerce.model,Product,391,46,70,0,8,7,48,10,13,10
+E-Commerce Application,com.ecommerce.model,Order.OrderStatus,0,54,0,0,0,2,0,1,0,1
+E-Commerce Application,com.ecommerce.service,ProductService,77,60,14,4,20,12,12,7,4,6
+E-Commerce Application,com.ecommerce.service,OrderService,51,88,4,4,13,22,8,5,5,4
+E-Commerce Application,com.ecommerce.service,UserService,104,51,14,2,25,11,11,6,4,5
+E-Commerce Application,com.ecommerce,EcommerceApplication,11,0,0,0,4,0,2,0,2,0
+E-Commerce Application,com.ecommerce.controller,HealthController,44,0,0,0,7,0,2,0,2,0
+E-Commerce Application,com.ecommerce.controller,ProductController,118,0,6,0,30,0,13,0,10,0
+E-Commerce Application,com.ecommerce.controller,UserController,159,0,12,0,41,0,16,0,10,0
+E-Commerce Application,com.ecommerce.controller,OrderController,144,0,8,0,35,0,13,0,9,0

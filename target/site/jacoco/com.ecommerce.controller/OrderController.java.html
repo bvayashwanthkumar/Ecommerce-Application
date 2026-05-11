@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>OrderController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">E-Commerce Application</a> &gt; <a href="index.source.html" class="el_package">com.ecommerce.controller</a> &gt; <span class="el_source">OrderController.java</span></div><h1>OrderController.java</h1><pre class="source lang-java linenums">package com.ecommerce.controller;
+
+import com.ecommerce.model.Order;
+import com.ecommerce.service.OrderService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * Order Controller - REST API endpoints for orders
+ */
+@RestController
+@RequestMapping(&quot;/orders&quot;)
+@CrossOrigin(origins = &quot;*&quot;)
+<span class="nc" id="L19">public class OrderController {</span>
+
+    @Autowired
+    private OrderService orderService;
+
+    /**
+     * GET /api/orders - Get all orders
+     */
+    @GetMapping
+    public ResponseEntity&lt;List&lt;Order&gt;&gt; getAllOrders() {
+<span class="nc" id="L29">        List&lt;Order&gt; orders = orderService.getAllOrders();</span>
+<span class="nc" id="L30">        return ResponseEntity.ok(orders);</span>
+    }
+
+    /**
+     * GET /api/orders/{id} - Get order by ID
+     */
+    @GetMapping(&quot;/{id}&quot;)
+    public ResponseEntity&lt;Order&gt; getOrderById(@PathVariable Long id) {
+<span class="nc" id="L38">        Order order = orderService.getOrderById(id);</span>
+<span class="nc bnc" id="L39" title="All 2 branches missed.">        if (order == null) {</span>
+<span class="nc" id="L40">            return ResponseEntity.notFound().build();</span>
+        }
+<span class="nc" id="L42">        return ResponseEntity.ok(order);</span>
+    }
+
+    /**
+     * GET /api/orders/user/{userId} - Get orders by user
+     */
+    @GetMapping(&quot;/user/{userId}&quot;)
+    public ResponseEntity&lt;List&lt;Order&gt;&gt; getOrdersByUser(@PathVariable Long userId) {
+<span class="nc" id="L50">        List&lt;Order&gt; orders = orderService.getOrdersByUser(userId);</span>
+<span class="nc" id="L51">        return ResponseEntity.ok(orders);</span>
+    }
+
+    /**
+     * GET /api/orders/status/{status} - Get orders by status
+     */
+    @GetMapping(&quot;/status/{status}&quot;)
+    public ResponseEntity&lt;List&lt;Order&gt;&gt; getOrdersByStatus(@PathVariable Order.OrderStatus status) {
+<span class="nc" id="L59">        List&lt;Order&gt; orders = orderService.getOrdersByStatus(status);</span>
+<span class="nc" id="L60">        return ResponseEntity.ok(orders);</span>
+    }
+
+    /**
+     * POST /api/orders - Create new order
+     */
+    @PostMapping
+    public ResponseEntity&lt;Map&lt;String, Object&gt;&gt; createOrder(
+            @RequestParam Long userId,
+            @RequestParam Double totalAmount,
+            @RequestParam(required = false) String notes) {
+<span class="nc" id="L71">        Order order = orderService.createOrder(userId, totalAmount, notes);</span>
+<span class="nc" id="L72">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
+        
+<span class="nc bnc" id="L74" title="All 2 branches missed.">        if (order == null) {</span>
+<span class="nc" id="L75">            response.put(&quot;success&quot;, false);</span>
+<span class="nc" id="L76">            response.put(&quot;message&quot;, &quot;User not found&quot;);</span>
+<span class="nc" id="L77">            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);</span>
+        }
+
+<span class="nc" id="L80">        response.put(&quot;success&quot;, true);</span>
+<span class="nc" id="L81">        response.put(&quot;message&quot;, &quot;Order created successfully&quot;);</span>
+<span class="nc" id="L82">        response.put(&quot;order&quot;, order);</span>
+<span class="nc" id="L83">        return ResponseEntity.status(HttpStatus.CREATED).body(response);</span>
+    }
+
+    /**
+     * PATCH /api/orders/{id}/status - Update order status
+     */
+    @PatchMapping(&quot;/{id}/status&quot;)
+    public ResponseEntity&lt;Order&gt; updateOrderStatus(
+            @PathVariable Long id,
+            @RequestParam Order.OrderStatus status) {
+<span class="nc" id="L93">        Order updatedOrder = orderService.updateOrderStatus(id, status);</span>
+<span class="nc bnc" id="L94" title="All 2 branches missed.">        if (updatedOrder == null) {</span>
+<span class="nc" id="L95">            return ResponseEntity.notFound().build();</span>
+        }
+<span class="nc" id="L97">        return ResponseEntity.ok(updatedOrder);</span>
+    }
+
+    /**
+     * DELETE /api/orders/{id}/cancel - Cancel order
+     */
+    @DeleteMapping(&quot;/{id}/cancel&quot;)
+    public ResponseEntity&lt;Map&lt;String, String&gt;&gt; cancelOrder(@PathVariable Long id) {
+<span class="nc" id="L105">        boolean cancelled = orderService.cancelOrder(id);</span>
+<span class="nc" id="L106">        Map&lt;String, String&gt; response = new HashMap&lt;&gt;();</span>
+        
+<span class="nc bnc" id="L108" title="All 2 branches missed.">        if (!cancelled) {</span>
+<span class="nc" id="L109">            response.put(&quot;message&quot;, &quot;Order cannot be cancelled (not pending or not found)&quot;);</span>
+<span class="nc" id="L110">            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);</span>
+        }
+
+<span class="nc" id="L113">        response.put(&quot;message&quot;, &quot;Order cancelled successfully&quot;);</span>
+<span class="nc" id="L114">        return ResponseEntity.ok(response);</span>
+    }
+
+    /**
+     * GET /api/orders/health - Health check
+     */
+    @GetMapping(&quot;/health&quot;)
+    public ResponseEntity&lt;Map&lt;String, String&gt;&gt; health() {
+<span class="nc" id="L122">        Map&lt;String, String&gt; response = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L123">        response.put(&quot;status&quot;, &quot;✅ Order Service is healthy&quot;);</span>
+<span class="nc" id="L124">        return ResponseEntity.ok(response);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

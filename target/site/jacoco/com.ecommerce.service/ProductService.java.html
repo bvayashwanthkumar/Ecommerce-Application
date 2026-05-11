@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ProductService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">E-Commerce Application</a> &gt; <a href="index.source.html" class="el_package">com.ecommerce.service</a> &gt; <span class="el_source">ProductService.java</span></div><h1>ProductService.java</h1><pre class="source lang-java linenums">package com.ecommerce.service;
+
+import com.ecommerce.model.Product;
+import com.ecommerce.repository.ProductRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+
+/**
+ * Product Service - Business logic for products
+ */
+@Service
+<span class="fc" id="L15">public class ProductService {</span>
+
+    @Autowired
+    private ProductRepository productRepository;
+
+    /**
+     * Get all products
+     */
+    public List&lt;Product&gt; getAllProducts() {
+<span class="fc" id="L24">        return productRepository.findAll();</span>
+    }
+
+    /**
+     * Get product by ID
+     */
+    public Product getProductById(Long id) {
+<span class="fc" id="L31">        Optional&lt;Product&gt; product = productRepository.findById(id);</span>
+<span class="fc" id="L32">        return product.orElse(null);</span>
+    }
+
+    /**
+     * Search products by name
+     */
+    public List&lt;Product&gt; searchByName(String name) {
+<span class="nc" id="L39">        return productRepository.findByNameContainingIgnoreCase(name);</span>
+    }
+
+    /**
+     * Get products in price range
+     */
+    public List&lt;Product&gt; getProductsByPriceRange(Double minPrice, Double maxPrice) {
+<span class="nc" id="L46">        return productRepository.findByPriceBetween(minPrice, maxPrice);</span>
+    }
+
+    /**
+     * Get available products
+     */
+    public List&lt;Product&gt; getAvailableProducts() {
+<span class="nc" id="L53">        return productRepository.findAvailableProducts();</span>
+    }
+
+    /**
+     * Create new product
+     */
+    public Product createProduct(Product product) {
+<span class="fc" id="L60">        product.setCreatedAt(new Date());</span>
+<span class="fc" id="L61">        product.setUpdatedAt(new Date());</span>
+<span class="fc" id="L62">        return productRepository.save(product);</span>
+    }
+
+    /**
+     * Update existing product
+     */
+    public Product updateProduct(Long id, Product productDetails) {
+<span class="nc" id="L69">        Optional&lt;Product&gt; optionalProduct = productRepository.findById(id);</span>
+        
+<span class="nc bnc" id="L71" title="All 2 branches missed.">        if (!optionalProduct.isPresent()) {</span>
+<span class="nc" id="L72">            return null;</span>
+        }
+
+<span class="nc" id="L75">        Product product = optionalProduct.get();</span>
+        
+<span class="nc bnc" id="L77" title="All 2 branches missed.">        if (productDetails.getName() != null) {</span>
+<span class="nc" id="L78">            product.setName(productDetails.getName());</span>
+        }
+<span class="nc bnc" id="L80" title="All 2 branches missed.">        if (productDetails.getDescription() != null) {</span>
+<span class="nc" id="L81">            product.setDescription(productDetails.getDescription());</span>
+        }
+<span class="nc bnc" id="L83" title="All 2 branches missed.">        if (productDetails.getPrice() != null) {</span>
+<span class="nc" id="L84">            product.setPrice(productDetails.getPrice());</span>
+        }
+<span class="nc bnc" id="L86" title="All 2 branches missed.">        if (productDetails.getQuantity() != null) {</span>
+<span class="nc" id="L87">            product.setQuantity(productDetails.getQuantity());</span>
+        }
+<span class="nc bnc" id="L89" title="All 2 branches missed.">        if (productDetails.getCategory() != null) {</span>
+<span class="nc" id="L90">            product.setCategory(productDetails.getCategory());</span>
+        }
+
+<span class="nc" id="L93">        product.setUpdatedAt(new Date());</span>
+<span class="nc" id="L94">        return productRepository.save(product);</span>
+    }
+
+    /**
+     * Delete product
+     */
+    public boolean deleteProduct(Long id) {
+<span class="pc bpc" id="L101" title="1 of 2 branches missed.">        if (productRepository.existsById(id)) {</span>
+<span class="fc" id="L102">            productRepository.deleteById(id);</span>
+<span class="fc" id="L103">            return true;</span>
+        }
+<span class="nc" id="L105">        return false;</span>
+    }
+
+    /**
+     * Check product availability
+     */
+    public boolean isAvailable(Long productId, Integer quantity) {
+<span class="fc" id="L112">        Product product = getProductById(productId);</span>
+<span class="pc bpc" id="L113" title="1 of 4 branches missed.">        return product != null &amp;&amp; product.getQuantity() &gt;= quantity;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
